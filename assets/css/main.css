@@ -3745,6 +3745,10 @@ input, select, textarea {
 					font-size: 1.25em;
 				}
 
+				#banner h2.company {
+					font-size: 6em;
+				}
+
 				#banner br {
 					display: none;
 				}
