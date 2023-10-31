@@ -82,5 +82,65 @@
 
 	// Contact Form
 
+	// Logo Animation
+	const $logo = $("#animated-logo");
+	const logoText = $logo.text()
+	const $cursor = $("<span>").attr("id", "cursor").text("_");
+	let index = 0;
 
+	// Cursor
+	function showCursor() { $cursor.css("visibility", "visible"); }
+	function hideCursor() { $cursor.css("visibility", "hidden"); }
+	function toggleCursor() { $cursor.css("visibility") === "hidden" ? showCursor() : hideCursor() }
+	function blinkCursor(speed) {
+		return setInterval(function() {
+			toggleCursor();
+		}, speed); // Adjust the blinking speed (in milliseconds)
+	}
+	function setCursorPositionInPx(x, y) {
+		$cursor.css('left', x + 'px');
+		$cursor.css('top', y + 'px');
+	}
+
+	$window.on('load', function() {
+		window.setTimeout(function() {
+			//Logo - clear Text
+			$logo.text("");
+
+			//Cursor - init
+			$cursor.insertAfter($logo);
+			//Cursor - set init position
+			setCursorPositionInPx(
+				($window.width() / 2) - ($cursor.width() / 2),
+				$logo.position().top
+			);
+			//Cursor - blink
+			var cursorIntervalId = blinkCursor(500); // Adjust the blinking speed (in milliseconds)
+
+			//Logo - Start Typing Animation
+			setTimeout(function() {
+				clearInterval(cursorIntervalId); //as we type, stop cursor blinking
+				showCursor(); //cursor constantly on
+				type(); // run type animation
+			}, 2500);
+
+		}, 100);
+	});
+
+	function type() {
+		if (index < logoText.length) {
+			$logo.text($logo.text() + logoText.charAt(index));
+			var endPosition = $logo.offset().left + $logo.width();
+			//Adjust cursor position
+			setCursorPositionInPx(endPosition, $cursor.offset().top );
+
+			index++;
+			setTimeout(type, 200); // Adjust typing speed here (in milliseconds)
+		} else {
+			$cursor.fadeOut(1000, function() {
+				// Remove the cursor after it has faded out
+				$cursor.remove();
+			});
+		}
+	}
 })(jQuery);
